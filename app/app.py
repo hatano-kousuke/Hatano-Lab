@@ -1,8 +1,7 @@
+from unittest.mock import Base
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
-from app.models.base import Base
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
