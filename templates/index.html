@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>畑野航介 | エンジニアポートフォリオ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="site-title">
+            <a href="/"><h1>畑野 航介 | Portfolio</h1></a>
+        </div>
+        <nav>
+            <ul>
+                <!-- 記事一覧へジャンプ -->
+                <li><a href="#posts">記事一覧</a></li> 
+                <!-- 新規追加: ログイン画面へ遷移 -->
+                <li><a href="{{ url_for('login') }}">ログイン</a></li>
+                <!-- お問い合わせ画面への遷移を想定 -->
+                <li><a href="{{ url_for('contact') }}">お問い合わせ</a></li> 
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 経歴 (トップページ内で完結) -->
+        <section id="about">
+            <h2>👤 経歴・自己紹介</h2>
+            <p>エンジニアとしての経歴や自己紹介をここに記載します。</p>
+        </section>
+
+        <!-- スキル (トップページ内で完結) -->
+        <section id="skills">
+            <h2>🛠 スキル</h2>
+            <ul>
+                <li>**Web開発**: Python / Flask / SQLAlchemy</li>
+                <li>**フロント**: HTML / CSS / JavaScript</li>
+                <li>**データベース**: PostgreSQL / SQLite</li>
+                <li>**ツール**: Git / Render / VSCode</li>
+            </ul>
+        </section>
+
+        <!-- 記事一覧セクション -->
+        <section id="posts">
+            <h2>📝 技術記事</h2>
+            
+            {% if posts %}
+                <ul class="post-list">
+                    {% for post in posts %}
+                    <li class="post-item">
+                        <!-- 記事タイトルを押下し詳細画面へ遷移 -->
+                        <a href="{{ url_for('post_detail', post_id=post.id) }}" class="post-title">
+                            {{ post.title }}
+                        </a>
+                        <p class="post-date">{{ post.date }}</p>
+                        <p class="post-summary">{{ post.summary }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>現在、投稿されている記事はありません。</p>
+            {% endif %}
+
+        </section>
+
+        <!-- お問い合わせ -->
+        <section id="contact-info">
+            <h2>📧 お問い合わせ</h2>
+            <p>ご質問やご相談がありましたら、<a href="{{ url_for('contact') }}">**お問い合わせページ**</a> よりご連絡ください。</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 畑野航介</p>
+    </footer>
+
+</body>
+</html>

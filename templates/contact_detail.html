@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ詳細 | 管理者</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    
+    <header class="bg-blue-600 shadow-md text-white">
+        <div class="container mx-auto p-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">管理者ダッシュボード</h1>
+            <nav>
+                <a href="{{ url_for('contact_list') }}" class="px-4 py-1 rounded hover:bg-blue-700 transition">一覧に戻る</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-8">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">お問い合わせ詳細 (ID: {{ contact_id }})</h2>
+
+        <div class="bg-white p-6 rounded-lg shadow-lg space-y-4">
+            <p class="text-lg font-bold">件名: <span class="font-normal">Webサイトに関するご質問</span></p>
+            <p class="text-lg font-bold">氏名: <span class="font-normal">田中 太郎</span></p>
+            <p class="text-lg font-bold">メールアドレス: <span class="font-normal">tanaka@example.com</span></p>
+            <p class="text-lg font-bold">受信日: <span class="font-normal">2025-11-01</span></p>
+            
+            <hr class="border-gray-200 my-4">
+
+            <div>
+                <p class="text-lg font-bold mb-2">お問い合わせ内容:</p>
+                <div class="bg-gray-100 p-4 rounded-lg border border-gray-200 min-h-[150px]">
+                    <p class="whitespace-pre-wrap">いつもポートフォリオを拝見しています。
+貴サイトのフッターの表示がスマートフォンで少し崩れているように見受けられます。
+CSSの修正が必要かもしれません。ご確認いただけますでしょうか。</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-4">
+                <button class="px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition shadow-md">
+                    このお問い合わせを削除
+                </button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
