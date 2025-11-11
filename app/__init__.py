@@ -14,7 +14,9 @@ def create_app():
     migrate.init_app(app, db)
 
     # モデルを読み込む（テーブル定義を登録する）
-    from app.models import models
+    # モデルを読み込む（テーブル定義を登録する）
+    from app.models import User, Password
+
 
     # ✅ ルーティング登録（Blueprintを読み込み）
     from app.routes import bp as main_bp

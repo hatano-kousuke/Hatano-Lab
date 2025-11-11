@@ -1,4 +1,4 @@
-<!-- Hatano-Lab/templates/admin_dashboard.html-->
+<!-- Hatano-Lab/templates/admin_dashboard.html -->
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -17,9 +17,12 @@
     
     <header class="bg-indigo-700 shadow-md text-white">
         <div class="container mx-auto p-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold">記事管理ダッシュボード</h1>
+            <h1 class="text-2xl font-bold">管理者ダッシュボード</h1>
             <nav class="space-x-4">
                 <a href="{{ url_for('top') }}" class="px-3 py-1 rounded hover:bg-indigo-600 transition">トップ画面</a>
+                <a href="{{ url_for('contact_list') }}" class="px-3 py-1 rounded bg-blue-500 hover:bg-blue-600 transition shadow-md">
+                    お問い合わせ一覧
+                </a>
                 <a href="{{ url_for('logout') }}" class="px-3 py-1 bg-red-500 rounded hover:bg-red-600 transition shadow-md">ログアウト</a>
             </nav>
         </div>
@@ -38,11 +41,16 @@
         
         <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">公開記事一覧</h2>
         
-        <!-- 記事作成ボタン (ダミー) -->
-        <div class="mb-8">
-            <button class="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition shadow-md cursor-not-allowed opacity-50">
-                + 新しい記事を作成 (機能未実装)
-            </button>
+        <!-- 記事作成ボタン -->
+        <div class="mb-8 flex space-x-4">
+            <a href="{{ url_for('post_create') }}" 
+               class="inline-block px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition shadow-md">
+                + 新しい記事を作成
+            </a>
+            <a href="{{ url_for('contact_list') }}" 
+               class="inline-block px-6 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition shadow-md">
+                お問い合わせ一覧
+            </a>
         </div>
 
         <!-- 記事一覧テーブル -->
@@ -61,14 +69,12 @@
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ post.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <!-- 記事詳細画面へ遷移 -->
                             <a href="{{ url_for('post_detail', post_id=post.id) }}" class="text-blue-600 hover:text-blue-800 font-semibold">
                                 {{ post.title }}
                             </a>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ post.date }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-center space-x-2">
-                            <!-- 記事編集リンク (ダミー) -->
                             <span class="text-indigo-400 cursor-not-allowed opacity-75">編集</span>
                             <span class="text-red-400 cursor-not-allowed opacity-75 ml-2">削除</span>
                         </td>

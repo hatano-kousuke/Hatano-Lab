@@ -1,3 +1,5 @@
+<!-- Hatano-Lab/templates/contact_list.html -->
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -12,15 +14,14 @@
         <div class="container mx-auto p-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold">管理者ダッシュボード</h1>
             <nav>
-                <a href="{{ url_for('admin_posts_list') }}" class="px-4 py-1 rounded hover:bg-blue-700 transition">記事管理に戻る</a>
+                <a href="{{ url_for('admin_dashboard') }}" class="px-4 py-1 rounded hover:bg-blue-700 transition">記事管理に戻る</a>
             </nav>
         </div>
     </header>
 
     <main class="container mx-auto p-8">
-        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">お問い合わせ一覧画面</h2>
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">お問い合わせ一覧</h2>
 
-        <!-- お問い合わせ一覧テーブル -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -37,12 +38,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ contact.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ contact.name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <!-- お問い合わせ詳細画面へ遷移 -->
                             <a href="{{ url_for('contact_detail', contact_id=contact.id) }}" class="text-blue-600 hover:text-blue-800 font-semibold">
                                 {{ contact.subject }}
                             </a>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ contact.date }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ contact.date.strftime('%Y-%m-%d %H:%M') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
