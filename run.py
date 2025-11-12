@@ -93,7 +93,7 @@ class Contact(db.Model):
 # -----------------------------
 # 疑似ログイン制御
 # -----------------------------
-logged_in = True  # ← デモ用に常にログイン状態
+logged_in = True  # デモ用（常にログイン状態）
 
 def login_required():
     global logged_in
@@ -104,7 +104,7 @@ def login_required():
 
 
 # -----------------------------
-# ✅ ログイン・ログアウトルート追加
+# ログイン・ログアウト
 # -----------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -113,7 +113,6 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # ★ 実際のアプリではDB認証を行う部分
         if username == "admin" and password == "password":
             logged_in = True
             flash("ログインしました。", "success")
@@ -138,44 +137,16 @@ def logout():
 @app.route("/")
 def top():
     posts = Article.query.order_by(Article.article_id.desc()).all()
-    return render_template("index.html", posts=posts)
+    return render_template("index.html", posts=posts, logged_in=logged_in)
 
 
 # -----------------------------
-# お問い合わせページ
+# 記事詳細ページ（★追加）
 # -----------------------------
-@app.route("/contact", methods=["GET"])
-def contact():
-    categories = ContactCategory.query.filter_by(deleted_flg=0).all()
-    return render_template("contact.html", categories=categories)
-
-
-@app.route("/contact/submit", methods=["POST"])
-def contact_submit():
-    name = request.form.get("contact_name")
-    furigana = request.form.get("contact_furigana")
-    email = request.form.get("contact_email")
-    category_id = request.form.get("contact_category_id")
-    content = request.form.get("contact_content")
-
-    if not name or not email or not content:
-        flash("必須項目が未入力です。", "danger")
-        return redirect(url_for("contact"))
-
-    new_contact = Contact(
-        contact_name=name,
-        contact_furigana=furigana,
-        contact_email=email,
-        contact_category_id=category_id,
-        contact_content=content,
-        rec_crtn_prg_id="contact_submit",
-        rec_upd_prg_id="contact_submit",
-    )
-    db.session.add(new_contact)
-    db.session.commit()
-
-    flash("お問い合わせを送信しました。", "success")
-    return render_template("contact_complete.html", form_data=request.form)
+@app.route("/post/<int:post_id>")
+def post_detail(post_id):
+    post = Article.query.get_or_404(post_id)
+    return render_template("post_detail.html", post=post, logged_in=logged_in)
 
 
 # -----------------------------
@@ -218,7 +189,7 @@ def post_create():
         flash(f"記事『{title}』を作成しました。", "success")
         return redirect(url_for("admin_dashboard"))
 
-    return render_template("post_create.html")
+    return render_template("post_create.html", logged_in=logged_in)
 
 
 # -----------------------------
@@ -232,8 +203,55 @@ def admin_dashboard():
 
     posts = Article.query.order_by(Article.article_id.desc()).all()
     contacts = Contact.query.order_by(Contact.contact_id.desc()).all()
-    return render_template("admin_dashboard.html", posts=posts, contacts=contacts)
+    return render_template("admin_dashboard.html", posts=posts, contacts=contacts, logged_in=logged_in)
 
+
+# -----------------------------
+# お問い合わせページ
+# -----------------------------
+@app.route("/contact", methods=["GET"])
+def contact():
+    categories = ContactCategory.query.filter_by(deleted_flg=0).all()
+    return render_template("contact.html", categories=categories)
+
+
+@app.route("/contact/submit", methods=["POST"])
+def contact_submit():
+    name = request.form.get("contact_name")
+    furigana = request.form.get("contact_furigana")
+    email = request.form.get("contact_email")
+    category_id = request.form.get("contact_category_id")
+    content = request.form.get("contact_content")
+
+    if not name or not email or not content:
+        flash("必須項目が未入力です。", "danger")
+        return redirect(url_for("contact"))
+
+    new_contact = Contact(
+        contact_name=name,
+        contact_furigana=furigana,
+        contact_email=email,
+        contact_category_id=category_id,
+        contact_content=content,
+        rec_crtn_prg_id="contact_submit",
+        rec_upd_prg_id="contact_submit",
+    )
+    db.session.add(new_contact)
+    db.session.commit()
+
+    flash("お問い合わせを送信しました。", "success")
+    return render_template("contact_complete.html", form_data=request.form)
+
+# お問い合わせ一覧（管理者用）
+# -----------------------------
+@app.route("/admin/contact_list")
+def contact_list():
+    check = login_required()
+    if check:
+        return check
+
+    contacts = Contact.query.order_by(Contact.contact_id.desc()).all()
+    return render_template("contact_list.html", contacts=contacts, logged_in=logged_in)
 
 # -----------------------------
 # 起動処理
