@@ -16,61 +16,83 @@
         </div>
         <nav>
             <ul>
-                <!-- 記事一覧へジャンプ -->
-                <li><a href="#posts">記事一覧</a></li> 
-                <!-- 新規追加: ログイン画面へ遷移 -->
+                <li><a href="#posts">記事一覧</a></li>
                 <li><a href="{{ url_for('login') }}">ログイン</a></li>
-                <!-- お問い合わせ画面への遷移を想定 -->
-                <li><a href="{{ url_for('contact') }}">お問い合わせ</a></li> 
+                <li><a href="{{ url_for('contact') }}">お問い合わせ</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <!-- 経歴 (トップページ内で完結) -->
+
+        <!-- 経歴 -->
         <section id="about">
             <h2>👤 経歴・自己紹介</h2>
             <p>エンジニアとしての経歴や自己紹介をここに記載します。</p>
         </section>
 
-        <!-- スキル (トップページ内で完結) -->
+        <!-- スキル -->
         <section id="skills">
             <h2>🛠 スキル</h2>
             <ul>
-                <li>**Web開発**: Python / Flask / SQLAlchemy</li>
-                <li>**フロント**: HTML / CSS / JavaScript</li>
-                <li>**データベース**: PostgreSQL / SQLite</li>
-                <li>**ツール**: Git / Render / VSCode</li>
+                <li><strong>Web開発</strong>: Python / Flask / SQLAlchemy</li>
+                <li><strong>フロント</strong>: HTML / CSS / JavaScript</li>
+                <li><strong>データベース</strong>: PostgreSQL / SQLite</li>
+                <li><strong>ツール</strong>: Git / Render / VSCode</li>
             </ul>
         </section>
 
-        <!-- 記事一覧セクション -->
+        <!-- 記事一覧 -->
         <section id="posts">
-            <h2>📝 技術記事</h2>
-            
+            <h2>📝 記事一覧</h2>
+
             {% if posts %}
                 <ul class="post-list">
                     {% for post in posts %}
-                    <li class="post-item">
-                        <!-- 記事タイトルを押下し詳細画面へ遷移 -->
-                        <a href="{{ url_for('post_detail', post_id=post.article_id) }}" class="post-title">
-                            {{ post.title }}
-                        </a>
-                        <p class="post-date">{{ post.date }}</p>
-                        <p class="post-summary">{{ post.summary }}</p>
-                    </li>
+                        <li class="post-item">
+
+                            <!-- ▼ サムネイル（画像がある場合のみ表示） -->
+                            {% if post.article_image_path %}
+                                <div class="post-thumbnail">
+                                    <img src="{{ url_for('static', filename=post.article_image_path) }}"
+                                         alt="サムネイル画像"
+                                         class="thumbnail-img">
+                                </div>
+                            {% endif %}
+                            <!-- ▲ サムネイル -->
+
+                            <!-- タイトル -->
+                            <a href="{{ url_for('post_detail', post_id=post.article_id) }}"
+                               class="post-title">
+                                {{ post.article_title }}
+                            </a>
+
+                            <!-- 投稿日 -->
+                            <p class="post-date">
+                                {{ post.created_at.strftime('%Y-%m-%d') if post.created_at else '' }}
+                            </p>
+
+                            <!-- サマリ -->
+                            <p class="post-summary">
+                                {{ post.article_body[:60] }}...
+                            </p>
+
+                        </li>
                     {% endfor %}
                 </ul>
             {% else %}
                 <p>現在、投稿されている記事はありません。</p>
             {% endif %}
-
         </section>
 
         <!-- お問い合わせ -->
         <section id="contact-info">
             <h2>📧 お問い合わせ</h2>
-            <p>ご質問やご相談がありましたら、<a href="{{ url_for('contact') }}">**お問い合わせページ**</a> よりご連絡ください。</p>
+            <p>
+                ご質問やご相談がありましたら、
+                <a href="{{ url_for('contact') }}"><strong>お問い合わせページ</strong></a>
+                よりご連絡ください。
+            </p>
         </section>
     </main>
 

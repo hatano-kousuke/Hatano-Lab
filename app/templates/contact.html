@@ -23,7 +23,6 @@
       const suggestBox = document.getElementById("suggestList");
       suggestBox.innerHTML = "";
 
-      // 3桁以上入力されたらサジェスト開始
       if (postal.length < 3) return;
 
       try {
@@ -49,7 +48,6 @@
       document.querySelector('input[name="postal"]').value = result.zipcode;
       document.getElementById("suggestList").innerHTML = "";
 
-      // 都道府県選択を自動
       const prefSelect = document.getElementById("prefectureSelect");
       for (const option of prefSelect.options) {
         if (option.value === result.address1) {
@@ -58,7 +56,6 @@
         }
       }
 
-      // 市区町村設定
       const citySelect = document.getElementById("citySelect");
       citySelect.innerHTML = "";
       const option = document.createElement("option");
@@ -67,7 +64,6 @@
       option.selected = true;
       citySelect.appendChild(option);
 
-      // 番地の先頭に残り住所を補完
       document.querySelector('input[name="address"]').value = result.address3 || "";
     }
 
@@ -117,25 +113,25 @@
       <!-- お問い合わせ内容 -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">お問い合わせ内容</label>
-        <textarea name="message" rows="5" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400"></textarea>
+        <textarea name="contact_content" rows="5" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400"></textarea>
       </div>
 
       <!-- お名前 -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">お名前</label>
-        <input type="text" name="name" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400">
+        <input type="text" name="contact_name" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400">
       </div>
 
       <!-- フリガナ -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">フリガナ</label>
-        <input type="text" name="furigana" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400">
+        <input type="text" name="contact_furigana" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400">
       </div>
 
       <!-- メール -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">メールアドレス</label>
-        <input type="email" name="email" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400">
+        <input type="email" name="contact_email" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400">
       </div>
       <div>
         <label class="block text-gray-700 font-medium mb-1">メールアドレス（確認用）</label>

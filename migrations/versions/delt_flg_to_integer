@@ -1,0 +1,26 @@
+from alembic import op
+import sqlalchemy as sa
+
+def upgrade():
+    op.execute('ALTER TABLE "USR000" ALTER COLUMN delt_flg TYPE INTEGER USING delt_flg::integer')
+    op.execute('ALTER TABLE "USR001" ALTER COLUMN delt_flg TYPE INTEGER USING delt_flg::integer')
+
+def downgrade():
+    op.execute('ALTER TABLE "USR000" ALTER COLUMN delt_flg TYPE VARCHAR(1) USING delt_flg::varchar')
+    op.execute('ALTER TABLE "USR001" ALTER COLUMN delt_flg TYPE VARCHAR(1) USING delt_flg::varchar')
+
+# revision identifiers, used by Alembic.
+revision = 'delt_flg_to_integer'  # ← ファイル名に合わせてもOK
+down_revision = '04e3dbdf731d'  # ← 直前のマイグレーションID
+branch_labels = None
+depends_on = None
+
+def upgrade():
+    # USR000, USR001 の delt_flg を varchar → integer に変更
+    op.execute('ALTER TABLE "USR000" ALTER COLUMN delt_flg TYPE INTEGER USING delt_flg::integer')
+    op.execute('ALTER TABLE "USR001" ALTER COLUMN delt_flg TYPE INTEGER USING delt_flg::integer')
+
+def downgrade():
+    # 元に戻す場合: integer → varchar(1)
+    op.execute('ALTER TABLE "USR000" ALTER COLUMN delt_flg TYPE VARCHAR(1) USING delt_flg::varchar')
+    op.execute('ALTER TABLE "USR001" ALTER COLUMN delt_flg TYPE VARCHAR(1) USING delt_flg::varchar')
