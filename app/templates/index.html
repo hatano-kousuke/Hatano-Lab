@@ -1,34 +1,43 @@
-<!-- app/templates/index.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>畑野航介 | エンジニアポートフォリオ</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 <body>
 
-    <!-- ヘッダー -->
+    <!-- 固定ヘッダー（ナビゲーションのみ） -->
     <header>
-        <div class="site-title">
-            <a href="/"><h1>畑野 航介 | Portfolio</h1></a>
+        <div class="header-inner">
+            <div class="site-title">
+                <a href="/"><h1>Hatano-Lab</h1></a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#about">経歴</a></li>
+                    <li><a href="#skills">スキル</a></li>
+                    <li><a href="#posts">記事一覧</a></li>
+                    <li><a href="{{ url_for('login') }}">ログイン</a></li>
+                    <li><a href="{{ url_for('contact') }}">お問い合わせ</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="#posts">記事一覧</a></li>
-                <li><a href="{{ url_for('login') }}">ログイン</a></li>
-                <li><a href="{{ url_for('contact') }}">お問い合わせ</a></li>
-            </ul>
-        </nav>
     </header>
+
+    <!-- ページ最初のヒーローセクション（背景画像＋タイトル） -->
+    <section class="hero">
+        <h1>Hatano-Lab</h1>
+    </section>
 
     <main>
 
         <!-- 経歴 -->
         <section id="about">
             <h2>👤 経歴・自己紹介</h2>
-            <p>エンジニアとしての経歴や自己紹介をここに記載します。</p>
+            <p>2025年からの半年間、エンジニアとしてのキャリアチェンジを目指し、集中的に学習に取り組んでまいりました。この期間で、Webアプリケーションの設計、データベース操作、そして効率的なコーディングの重要性を学びました。</p>
         </section>
 
         <!-- スキル -->
@@ -45,13 +54,10 @@
         <!-- 記事一覧 -->
         <section id="posts">
             <h2>📝 記事一覧</h2>
-
             {% if posts %}
                 <ul class="post-list">
                     {% for post in posts %}
                         <li class="post-item">
-
-                            <!-- ▼ サムネイル（画像がある場合のみ表示） -->
                             {% if post.article_image_path %}
                                 <div class="post-thumbnail">
                                     <img src="{{ url_for('static', filename=post.article_image_path) }}"
@@ -59,24 +65,11 @@
                                          class="thumbnail-img">
                                 </div>
                             {% endif %}
-                            <!-- ▲ サムネイル -->
-
-                            <!-- タイトル -->
-                            <a href="{{ url_for('post_detail', post_id=post.article_id) }}"
-                               class="post-title">
+                            <a href="{{ url_for('post_detail', post_id=post.article_id) }}" class="post-title">
                                 {{ post.article_title }}
                             </a>
-
-                            <!-- 投稿日 -->
-                            <p class="post-date">
-                                {{ post.created_at.strftime('%Y-%m-%d') if post.created_at else '' }}
-                            </p>
-
-                            <!-- サマリ -->
-                            <p class="post-summary">
-                                {{ post.article_body[:60] }}...
-                            </p>
-
+                            <p class="post-date">{{ post.created_at.strftime('%Y-%m-%d') if post.created_at else '' }}</p>
+                            <p class="post-summary">{{ post.article_body[:60] }}...</p>
                         </li>
                     {% endfor %}
                 </ul>
