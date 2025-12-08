@@ -1,33 +1,10 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>畑野航介 | エンジニアポートフォリオ</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-</head>
-<body>
+{% extends "base_before.html" %}
 
-    <!-- 固定ヘッダー（ナビゲーションのみ） -->
-    <header>
-        <div class="header-inner">
-            <div class="site-title">
-                <a href="/"><h1>Hatano-Lab</h1></a>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#about">経歴</a></li>
-                    <li><a href="#skills">スキル</a></li>
-                    <li><a href="#posts">記事一覧</a></li>
-                    <li><a href="{{ url_for('login') }}">ログイン</a></li>
-                    <li><a href="{{ url_for('contact') }}">お問い合わせ</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+{% block title %}畑野航介 | エンジニアポートフォリオ{% endblock %}
 
-    <!-- ページ最初のヒーローセクション（背景画像＋タイトル） -->
+{% block content %}
+
+    <!-- ページ最初のヒーローセクション -->
     <section class="hero">
         <h1>Hatano-Lab</h1>
     </section>
@@ -89,9 +66,4 @@
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 畑野航介</p>
-    </footer>
-
-</body>
-</html>
+{% endblock %}

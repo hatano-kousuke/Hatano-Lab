@@ -76,9 +76,9 @@ header nav a:hover {
 /* --------- ヒーローセクション ---------- */
 .hero {
     height: 100vh; /* 画面全体表示 */
-    /* 修正点1: 共通のsectionスタイルによる最大幅制限を解除 */
+
+    /* 最大幅制限を解除 */
     max-width: none;
-    /* 修正点2: ビューポートの幅全体を使用することを保証 */
     width: 100vw;
     margin: 0;
     padding: 0;
@@ -119,7 +119,6 @@ header nav a:hover {
 
 /* --------- セクション共通 ---------- */
 section {
-    /* ヒーローセクションには適用されても問題ないように、.heroで上書き済み */
     margin: 60px auto;
     max-width: 950px;
     padding: 0 20px;
@@ -134,7 +133,7 @@ section h2 {
 
 /* --------- 経歴・スキル ---------- */
 #about p, #skills ul {
-    font-size: 17px; /* 15pxから17pxに拡大 */
+    font-size: 17px;
     color: #4b5563;
 }
 
@@ -185,7 +184,7 @@ section h2 {
 }
 
 .post-title {
-    font-size: 20px; /* 18pxから20pxに拡大 */
+    font-size: 20px;
     font-weight: 700;
     color: #1f2937;
     margin-bottom: 6px;
@@ -199,12 +198,12 @@ section h2 {
 
 .post-date {
     color: #6b7280;
-    font-size: 14px; /* 13pxから14pxに拡大 */
+    font-size: 14px;
     margin-bottom: 8px;
 }
 
 .post-summary {
-    font-size: 16px; /* 14pxから16pxに拡大 */
+    font-size: 16px;
     color: #4b5563;
     flex-grow: 1;
 }
@@ -228,4 +227,13 @@ footer {
     background: #ffffff;
     color: #6b7280;
     border-top: 1px solid #e5e7eb;
+}
+
+/* =====================================
+   ヘッダー固定によるアンカーずれ対策
+   ===================================== */
+#about,
+#skills,
+#posts {
+    scroll-margin-top: 100px; /* ← ヘッダー高さ80px + 余白20px */
 }

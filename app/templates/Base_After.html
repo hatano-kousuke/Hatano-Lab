@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}管理画面{% endblock %}</title>
+
+    <!-- 必須 CSS: base.css を継承 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <!-- 任意: Tailwind（管理画面でユーティリティを使いたい場合のみ） -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 子テンプレートが追加の CSS を差し込める場所 -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+    {# header ブロック（子テンプレートでさらに上書き可） #}
+    {% block header %}
+    <header class="bg-gray-800 shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+
+            <!-- アプリケーション名/ブランド（大きく表示） -->
+            <a href="{{ url_for('top') }}" class="text-3xl font-extrabold text-white hover:text-indigo-300 transition duration-150 leading-none">
+                Hatano-Lab
+            </a>
+
+            <!-- ナビゲーションメニュー -->
+            <nav>
+                <ul class="flex space-x-6 items-center">
+                    <!-- トップ画面 -->
+                    <li>
+                        <a href="{{ url_for('top') }}" class="text-white hover:text-indigo-300 transition duration-150 font-medium">
+                            トップ
+                        </a>
+                    </li>
+
+                    <!-- 管理者ダッシュボード -->
+                    <li>
+                        <a href="{{ url_for('admin_dashboard') }}" class="text-white hover:text-indigo-300 transition duration-150 font-medium">
+                            ダッシュボード
+                        </a>
+                    </li>
+
+                    <!-- お問い合わせ一覧画面 -->
+                    <li>
+                        <a href="{{ url_for('contact_list') }}" class="text-white hover:text-indigo-300 transition duration-150 font-medium">
+                            お問い合わせ一覧
+                        </a>
+                    </li>
+
+                    <!-- ログアウト（表示を「ログアウト」のみに変更） -->
+                    <li>
+                        <a href="{{ url_for('logout') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150 transform hover:scale-105">
+                            ログアウト
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    {% endblock %}
+
+    <!-- フラッシュメッセージの共通表示領域 -->
+    <main class="container mx-auto px-4 py-6">
+        <div class="mb-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- 子テンプレートのコンテンツ -->
+        {% block content %}{% endblock %}
+    </main>
+
+    {# デフォルトの footer（必要なら上書き可） #}
+    {% block footer %}
+    <footer class="bg-white border-t border-gray-200 mt-8">
+        <div class="container mx-auto px-4 py-6 text-center text-gray-500">
+            <p>&copy; 2025 Hatano-Lab</p>
+        </div>
+    </footer>
+    {% endblock %}
+
+</body>
+</html>

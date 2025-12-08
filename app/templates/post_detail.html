@@ -1,59 +1,104 @@
-<!-- Hatano-Lab/app/templates/post_detail.html -->
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ post.article_title }} | 記事詳細</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+{# Hatano-Lab/app/templates/post_detail.html #}
+{% extends "base_after.html" %}
 
-<body class="bg-gray-50 min-h-screen font-sans">
+{% block title %}
+{{ post.article_title }} | 記事詳細
+{% endblock %}
 
-    <!-- ヘッダー -->
-    <header class="bg-blue-600 shadow-md text-white">
-        <div class="container mx-auto p-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold">記事詳細</h1>
-            <nav class="flex space-x-4">
-                {% if logged_in %}
-                    <a href="{{ url_for('logout') }}" class="px-4 py-1 rounded hover:bg-blue-700 transition">ログアウト</a>
-                {% else %}
-                    <a href="{{ url_for('top') }}" class="px-4 py-1 rounded hover:bg-blue-700 transition">トップに戻る</a>
-                {% endif %}
-            </nav>
-        </div>
-    </header>
+{% block content %}
 
-    <main class="container mx-auto p-8">
-        <h2 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">{{ post.article_title }}</h2>
+<div class="bg-red-100 text-red-800 p-4 mb-6 rounded">
+    ✅ post_detail.html が表示されています
+</div>
 
-        <div class="text-gray-500 text-sm mb-6">
-            <span>記事ID: {{ post.article_id }}</span> ｜ 
-            <span>最終更新: {{ post.rec_upd_tmstmp.strftime('%Y-%m-%d %H:%M') }}</span>
-        </div>
 
-        {% if post.article_image_path %}
-        <div class="mb-6">
-            <img src="{{ url_for('static', filename=post.article_image_path) }}" 
-                 alt="{{ post.article_title }}" class="rounded-lg shadow-md max-w-full">
-        </div>
-        {% endif %}
+<div class="max-w-4xl mx-auto px-4 py-8">
 
-        <article class="prose max-w-none bg-white p-6 rounded-lg shadow">
-            <p>{{ post.article_body }}</p>
-        </article>
+    <!-- =====================
+         記事タイトル
+    ====================== -->
+    <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b pb-2">
+        {{ post.article_title }}
+    </h2>
 
-        <div class="mt-8 flex justify-between">
-            <a href="{{ url_for('top') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
-                一覧に戻る
-            </a>
-            {% if logged_in %}
-                <a href="{{ url_for('post_create') }}" class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
-                    新規記事作成
-                </a>
-            {% endif %}
-        </div>
-    </main>
+    <!-- =====================
+         記事メタ情報
+    ====================== -->
+    <div class="text-sm text-gray-500 mb-6 space-x-4">
+        <span>記事ID: {{ post.article_id }}</span>
+        <span>
+            最終更新:
+            {{ post.rec_upd_tmstmp.strftime('%Y-%m-%d %H:%M') }}
+        </span>
+    </div>
 
-</body>
-</html>
+    <!-- =====================
+         サムネイル画像
+    ====================== -->
+    {% if post.article_image_path %}
+    <div class="mb-6">
+        <img
+            src="{{ url_for('static', filename=post.article_image_path) }}"
+            alt="{{ post.article_title }}"
+            class="w-full rounded-lg shadow-md"
+        >
+    </div>
+    {% endif %}
+
+    <!-- =====================
+         記事本文
+    ====================== -->
+    <article class="prose max-w-none bg-white p-6 rounded-lg shadow mb-10">
+        {{ post.article_body | safe }}
+    </article>
+
+    <!-- =====================
+         管理者用操作ボタン
+    ====================== -->
+    {% if logged_in %}
+    <div class="flex flex-wrap gap-4">
+
+        <!-- 編集 -->
+        <a
+            href="{{ url_for('post_edit', post_id=post.article_id) }}"
+            class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+        >
+            ✏️ 記事を編集
+        </a>
+
+        <!-- 削除（POST） -->
+        <form
+            method="POST"
+            action="{{ url_for('post_delete', post_id=post.article_id) }}"
+            onsubmit="return confirm('⚠️ 本当にこの記事を削除しますか？\nこの操作は取り消せません。');"
+        >
+            <button
+                type="submit"
+                class="inline-flex items-center px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+            >
+                🗑 記事を削除
+            </button>
+        </form>
+
+        <!-- 新規記事作成 -->
+        <a
+            href="{{ url_for('post_create') }}"
+            class="inline-flex items-center px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
+        >
+            ➕ 新規記事作成
+        </a>
+
+        <!-- 管理画面へ戻る -->
+        <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="inline-flex items-center px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
+        >
+            ⬅️ 管理画面に戻る
+        </a>
+
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

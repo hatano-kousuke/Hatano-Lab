@@ -202,7 +202,7 @@ def login():
 def logout():
     session.clear()
     flash("ログアウトしました。", "info")
-    return redirect(url_for("top"))
+    return redirect(url_for("login"))
 
 
 # -----------------------------
@@ -217,15 +217,53 @@ def top():
         logged_in=session.get("logged_in", False)
     )
 
+# -----------------------------
+# 記事詳細ページ（管理者限定）
+# -----------------------------
+from flask_login import login_required
 
-# -----------------------------
-# 記事詳細ページ
-# -----------------------------
 @app.route("/post/<int:post_id>")
+@login_required
 def post_detail(post_id):
-    post = Article.query.get_or_404(post_id)
-    return render_template("post_detail.html", post=post)
+    post = Article.query.filter_by(article_id=post_id).first_or_404()
 
+    return render_template(
+        "post_detail.html",
+        post=post,
+        logged_in=True   # ← テンプレートで使用
+    )
+
+# 記事編集ページ
+# -----------------------------
+@app.route("/post/<int:post_id>/edit", methods=["GET", "POST"])
+@login_required
+def post_edit(post_id):
+    post = Article.query.filter_by(article_id=post_id).first_or_404()
+
+    if request.method == "POST":
+        post.article_title = request.form["title"]
+        post.article_body = request.form["content"]
+
+        db.session.commit()
+        flash("記事を更新しました", "success")
+
+        return redirect(url_for("post_detail", post_id=post.article_id))
+
+    return render_template("post_edit.html", post=post)
+
+
+# 記事削除
+# -----------------------------
+@app.route("/post/<int:post_id>/delete", methods=["POST"])
+@login_required
+def post_delete(post_id):
+    post = Article.query.filter_by(article_id=post_id).first_or_404()
+
+    db.session.delete(post)
+    db.session.commit()
+
+    flash("記事を削除しました", "success")
+    return redirect(url_for("admin_dashboard"))
 
 # -----------------------------
 # 記事作成（画像アップロード対応）

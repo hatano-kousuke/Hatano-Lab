@@ -1,96 +1,123 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理者ダッシュボード</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .flash-message { padding: 1rem; margin-bottom: 1rem; border-radius: 0.375rem; font-weight: 600; }
-        .flash-success { background-color: #bbf7d0; color: #166534; border: 1px solid #22c55e; }
-        .flash-info { background-color: #bfdbfe; color: #1e40af; border: 1px solid #3b82f6; }
-        .thumbnail-img { width: 80px; height: auto; border-radius: 0.25rem; }
-    </style>
-</head>
-<body class="bg-gray-50 min-h-screen font-sans">
-    
-    <header class="bg-indigo-700 shadow-md text-white">
-        <div class="container mx-auto p-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold">管理者ダッシュボード</h1>
-            <nav class="space-x-4">
-                <a href="{{ url_for('top') }}" class="px-3 py-1 rounded hover:bg-indigo-600 transition">トップ画面</a>
-                <a href="{{ url_for('contact_list') }}" class="px-3 py-1 rounded bg-blue-500 hover:bg-blue-600 transition shadow-md">
-                    お問い合わせ一覧
-                </a>
-                <a href="{{ url_for('logout') }}" class="px-3 py-1 bg-red-500 rounded hover:bg-red-600 transition shadow-md">ログアウト</a>
-            </nav>
-        </div>
-    </header>
+{% extends "base_after.html" %}
 
-    <main class="container mx-auto p-8">
-        
-        <!-- フラッシュメッセージの表示 -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+{% block title %}管理者ダッシュボード{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-8">
+
+    <!-- フラッシュメッセージ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">
+        公開記事一覧
+    </h2>
+
+    <!-- 操作ボタン -->
+    <div class="mb-8 flex space-x-4">
+        <a
+            href="{{ url_for('post_create') }}"
+            class="inline-block px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md"
+        >
+            + 新しい記事を作成
+        </a>
+
+        <a
+            href="{{ url_for('contact_list') }}"
+            class="inline-block px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md"
+        >
+            お問い合わせ一覧
+        </a>
+    </div>
+
+    <!-- 記事一覧テーブル -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">サムネイル</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">タイトル</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">公開日</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">操作</th>
+                </tr>
+            </thead>
+
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for post in posts %}
+                <tr>
+                    <!-- ID -->
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                        {{ post.article_id }}
+                    </td>
+
+                    <!-- サムネイル -->
+                    <td class="px-6 py-4">
+                        {% if post.article_image_path %}
+                            <img
+                                src="{{ url_for('static', filename=post.article_image_path) }}"
+                                alt="サムネイル"
+                                class="h-16 w-auto rounded shadow"
+                            >
+                        {% else %}
+                            <span class="text-gray-400 text-sm">なし</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- ✅ 記事詳細へ（最重要チェック箇所） -->
+                    <td class="px-6 py-4 text-sm">
+                        <a
+                            href="{{ url_for('post_detail', post_id=post.article_id) }}"
+                            class="text-blue-600 hover:text-blue-800 font-semibold"
+                        >
+                            {{ post.article_title }}
+                        </a>
+                    </td>
+
+                    <!-- 公開日 -->
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        {{ post.rec_crtn_tmstmp.strftime('%Y-%m-%d') }}
+                    </td>
+
+                    <!-- 操作 -->
+                    <td class="px-6 py-4 text-center text-sm font-medium space-x-4">
+
+                        <!-- 編集 -->
+                        <a
+                            href="{{ url_for('post_edit', post_id=post.article_id) }}"
+                            class="text-indigo-600 hover:text-indigo-800"
+                        >
+                            編集
+                        </a>
+
+                        <!-- 削除 -->
+                        <form
+                            method="POST"
+                            action="{{ url_for('post_delete', post_id=post.article_id) }}"
+                            class="inline"
+                            onsubmit="return confirm('⚠️ 本当にこの記事を削除しますか？\nこの操作は取り消せません。');"
+                        >
+                            <button
+                                type="submit"
+                                class="text-red-600 hover:text-red-800 font-semibold"
+                            >
+                                削除
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
                 {% endfor %}
-            {% endif %}
-        {% endwith %}
-        
-        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">公開記事一覧</h2>
-        
-        <!-- 記事作成ボタン -->
-        <div class="mb-8 flex space-x-4">
-            <a href="{{ url_for('post_create') }}" 
-               class="inline-block px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition shadow-md">
-                + 新しい記事を作成
-            </a>
-            <a href="{{ url_for('contact_list') }}" 
-               class="inline-block px-6 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition shadow-md">
-                お問い合わせ一覧
-            </a>
-        </div>
+            </tbody>
+        </table>
+    </div>
 
-        <!-- 記事一覧テーブル -->
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">サムネイル</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">タイトル</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">公開日</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    {% for post in posts %}
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ post.article_id }}</td>
-                        
-                        <!-- サムネイル -->
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            {% if post.article_image_path %}
-                                <img src="{{ url_for('static', filename=post.article_image_path) }}" alt="サムネイル" class="thumbnail-img">
-                            {% endif %}
-                        </td>
-                        
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <a href="{{ url_for('post_detail', post_id=post.article_id) }}" class="text-blue-600 hover:text-blue-800 font-semibold">
-                                {{ post.article_title }}
-                            </a>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ post.rec_crtn_tmstmp.strftime('%Y-%m-%d') }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-center space-x-2">
-                            <span class="text-indigo-400 cursor-not-allowed opacity-75">編集</span>
-                            <span class="text-red-400 cursor-not-allowed opacity-75 ml-2">削除</span>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </main>
-</body>
-</html>
+</div>
+{% endblock %}
