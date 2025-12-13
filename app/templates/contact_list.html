@@ -1,55 +1,72 @@
-<!-- Hatano-Lab/templates/contact_list.html -->
+{# Hatano-Lab/templates/contact_list.html #}
+{% extends "base_after.html" %}
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お問い合わせ一覧 | 管理者</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen font-sans">
-    
-    <header class="bg-blue-600 shadow-md text-white">
-        <div class="container mx-auto p-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold">管理者ダッシュボード</h1>
-            <nav>
-                <a href="{{ url_for('admin_dashboard') }}" class="px-4 py-1 rounded hover:bg-blue-700 transition">記事管理に戻る</a>
-            </nav>
-        </div>
-    </header>
+{% block title %}
+お問い合わせ一覧 | 管理者
+{% endblock %}
 
-    <main class="container mx-auto p-8">
-        <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">お問い合わせ一覧</h2>
+{% block content %}
 
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">氏名</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">受信日</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    {% for contact in contacts %}
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            <a href="{{ url_for('contact_detail', contact_id=contact.contact_id) }}" class="text-blue-600 hover:text-blue-800 font-semibold">
-                                {{ contact.contact_id }}
-                            </a>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ contact.contact_name }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ contact.rec_crtn_tmstmp.strftime('%Y-%m-%d %H:%M') }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </main>
-</body>
-</html>
+<div class="container mx-auto px-6 py-10">
+
+    <!-- ページタイトル -->
+    <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800 border-b pb-2">
+            お問い合わせ一覧
+        </h2>
+
+        <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow"
+        >
+            ← 記事管理に戻る
+        </a>
+    </div>
+
+    <!-- テーブル -->
+    <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                        ID
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                        氏名
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                        受信日
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody class="bg-white divide-y divide-gray-100">
+                {% for contact in contacts %}
+                <tr class="hover:bg-gray-50 transition">
+
+                    <!-- ID -->
+                    <td class="px-6 py-4 text-sm font-medium text-indigo-600">
+                        <a href="{{ url_for('contact_detail', contact_id=contact.contact_id) }}">
+                            {{ contact.contact_id }}
+                        </a>
+                    </td>
+
+                    <!-- 氏名 -->
+                    <td class="px-6 py-4 text-sm text-gray-800">
+                        {{ contact.contact_name }}
+                    </td>
+
+                    <!-- 日付 -->
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        {{ contact.rec_crtn_tmstmp.strftime('%Y-%m-%d %H:%M') }}
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

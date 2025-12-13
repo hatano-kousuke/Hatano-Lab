@@ -1,5 +1,9 @@
-{# Hatano-Lab/app/templates/post_detail.html #}
-{% extends "base_after.html" %}
+{# ログイン前とログイン後で base を切り替え #}
+{% if logged_in %}
+    {% extends "base_after.html" %}
+{% else %}
+    {% extends "base_before.html" %}
+{% endif %}
 
 {% block title %}
 {{ post.article_title }} | 記事詳細
@@ -7,66 +11,52 @@
 
 {% block content %}
 
-<div class="bg-red-100 text-red-800 p-4 mb-6 rounded">
-    ✅ post_detail.html が表示されています
-</div>
+<div class="max-w-4xl mx-auto px-4 py-10">
 
-
-<div class="max-w-4xl mx-auto px-4 py-8">
-
-    <!-- =====================
-         記事タイトル
-    ====================== -->
-    <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b pb-2">
+    <!-- タイトル -->
+    <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight mb-6">
         {{ post.article_title }}
-    </h2>
+    </h1>
 
-    <!-- =====================
-         記事メタ情報
-    ====================== -->
-    <div class="text-sm text-gray-500 mb-6 space-x-4">
-        <span>記事ID: {{ post.article_id }}</span>
-        <span>
-            最終更新:
-            {{ post.rec_upd_tmstmp.strftime('%Y-%m-%d %H:%M') }}
+    <!-- メタ情報 -->
+    <div class="flex items-center text-sm text-gray-500 mb-8 gap-6">
+        <span class="flex items-center gap-1">
+            🆔 <strong>{{ post.article_id }}</strong>
+        </span>
+        <span class="flex items-center gap-1">
+            🕒 {{ post.rec_upd_tmstmp.strftime('%Y-%m-%d %H:%M') }}
         </span>
     </div>
 
-    <!-- =====================
-         サムネイル画像
-    ====================== -->
+    <!-- サムネイル -->
     {% if post.article_image_path %}
-    <div class="mb-6">
+    <div class="mb-10">
         <img
             src="{{ url_for('static', filename=post.article_image_path) }}"
             alt="{{ post.article_title }}"
-            class="w-full rounded-lg shadow-md"
+            class="w-full rounded-2xl shadow-lg object-cover"
         >
     </div>
     {% endif %}
 
-    <!-- =====================
-         記事本文
-    ====================== -->
-    <article class="prose max-w-none bg-white p-6 rounded-lg shadow mb-10">
+    <!-- 本文 -->
+    <article class="prose prose-lg max-w-none bg-white p-8 rounded-2xl shadow-md leading-relaxed">
         {{ post.article_body | safe }}
     </article>
 
-    <!-- =====================
-         管理者用操作ボタン
-    ====================== -->
+    <!-- 管理者専用 操作ボタン -->
     {% if logged_in %}
-    <div class="flex flex-wrap gap-4">
+    <div class="mt-10 flex gap-4">
 
         <!-- 編集 -->
         <a
             href="{{ url_for('post_edit', post_id=post.article_id) }}"
-            class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            class="px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium shadow hover:bg-indigo-700 transition"
         >
             ✏️ 記事を編集
         </a>
 
-        <!-- 削除（POST） -->
+        <!-- 削除 -->
         <form
             method="POST"
             action="{{ url_for('post_delete', post_id=post.article_id) }}"
@@ -74,27 +64,11 @@
         >
             <button
                 type="submit"
-                class="inline-flex items-center px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                class="px-6 py-3 bg-red-600 text-white rounded-xl font-medium shadow hover:bg-red-700 transition"
             >
-                🗑 記事を削除
+                🗑 削除
             </button>
         </form>
-
-        <!-- 新規記事作成 -->
-        <a
-            href="{{ url_for('post_create') }}"
-            class="inline-flex items-center px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
-        >
-            ➕ 新規記事作成
-        </a>
-
-        <!-- 管理画面へ戻る -->
-        <a
-            href="{{ url_for('admin_dashboard') }}"
-            class="inline-flex items-center px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
-        >
-            ⬅️ 管理画面に戻る
-        </a>
 
     </div>
     {% endif %}

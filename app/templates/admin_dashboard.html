@@ -5,35 +5,17 @@
 {% block content %}
 <div class="container mx-auto p-8">
 
-    <!-- フラッシュメッセージ -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash-message flash-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <!-- 見出し + 新規作成ボタン -->
+    <div class="flex items-center justify-between mb-6 border-b pb-2">
+        <h2 class="text-3xl font-semibold text-gray-800">
+            公開記事一覧
+        </h2>
 
-    <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">
-        公開記事一覧
-    </h2>
-
-    <!-- 操作ボタン -->
-    <div class="mb-8 flex space-x-4">
         <a
             href="{{ url_for('post_create') }}"
-            class="inline-block px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition shadow-md"
+            class="inline-flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition shadow-md"
         >
-            + 新しい記事を作成
-        </a>
-
-        <a
-            href="{{ url_for('contact_list') }}"
-            class="inline-block px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition shadow-md"
-        >
-            お問い合わせ一覧
+            ➕ 新しい記事を作成
         </a>
     </div>
 
@@ -53,12 +35,10 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 {% for post in posts %}
                 <tr>
-                    <!-- ID -->
                     <td class="px-6 py-4 text-sm text-gray-900">
                         {{ post.article_id }}
                     </td>
 
-                    <!-- サムネイル -->
                     <td class="px-6 py-4">
                         {% if post.article_image_path %}
                             <img
@@ -71,7 +51,6 @@
                         {% endif %}
                     </td>
 
-                    <!-- ✅ 記事詳細へ（最重要チェック箇所） -->
                     <td class="px-6 py-4 text-sm">
                         <a
                             href="{{ url_for('post_detail', post_id=post.article_id) }}"
@@ -81,15 +60,11 @@
                         </a>
                     </td>
 
-                    <!-- 公開日 -->
                     <td class="px-6 py-4 text-sm text-gray-500">
                         {{ post.rec_crtn_tmstmp.strftime('%Y-%m-%d') }}
                     </td>
 
-                    <!-- 操作 -->
                     <td class="px-6 py-4 text-center text-sm font-medium space-x-4">
-
-                        <!-- 編集 -->
                         <a
                             href="{{ url_for('post_edit', post_id=post.article_id) }}"
                             class="text-indigo-600 hover:text-indigo-800"
@@ -97,12 +72,11 @@
                             編集
                         </a>
 
-                        <!-- 削除 -->
                         <form
                             method="POST"
                             action="{{ url_for('post_delete', post_id=post.article_id) }}"
                             class="inline"
-                            onsubmit="return confirm('⚠️ 本当にこの記事を削除しますか？\nこの操作は取り消せません。');"
+                            onsubmit="return confirm('⚠️ 本当にこの記事を削除しますか？');"
                         >
                             <button
                                 type="submit"
@@ -111,7 +85,6 @@
                                 削除
                             </button>
                         </form>
-
                     </td>
                 </tr>
                 {% endfor %}

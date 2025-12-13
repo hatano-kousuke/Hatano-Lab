@@ -7,6 +7,7 @@ import uuid
 from werkzeug.utils import secure_filename
 from flask import session
 from functools import wraps
+from flask import session, redirect, url_for, flash
 
 # -----------------------------
 # Flaskアプリ初期化
@@ -218,19 +219,17 @@ def top():
     )
 
 # -----------------------------
-# 記事詳細ページ（管理者限定）
-# -----------------------------
-from flask_login import login_required
-
+# 記事詳細ページ（ログイン前は閲覧のみ）
 @app.route("/post/<int:post_id>")
-@login_required
 def post_detail(post_id):
     post = Article.query.filter_by(article_id=post_id).first_or_404()
+
+    logged_in = session.get("logged_in", False)
 
     return render_template(
         "post_detail.html",
         post=post,
-        logged_in=True   # ← テンプレートで使用
+        logged_in=logged_in
     )
 
 # 記事編集ページ
